@@ -1,1 +1,3 @@
-# js30
+# dom30
+
+exercises manipulating the DOM
