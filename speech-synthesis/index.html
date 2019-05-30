@@ -20,11 +20,11 @@
       <input name="rate" type="range" min="0" max="3" value="1" step="0.1">
 
       <label for="pitch">Pitch:</label>
-
       <input name="pitch" type="range" min="0" max="2" step="0.1">
+
       <textarea name="text">Hello! I love JavaScript 👍</textarea>
-      <button id="stop">Stop!</button>
       <button id="speak">Speak</button>
+      <button id="stop">Stop!</button>
 
     </div>
 
@@ -35,6 +35,55 @@
   const options = document.querySelectorAll('[type="range"], [name="text"]');
   const speakButton = document.querySelector('#speak');
   const stopButton = document.querySelector('#stop');
+
+  msg.text = document.querySelector('[name="text"]').value;
+
+  function populateVoices(){
+    voices = this.getVoices();
+    // console.log('this.getVoices()', voices);
+    const voicesPt = this.getVoices().filter(voice => voice.lang.includes('pt'));
+    const voicesEn = this.getVoices().filter(voice => voice.lang.includes('en'));
+    const newVoices = voicesPt.concat(voicesEn);
+    console.log('pt and en voices: ', newVoices);
+    // console.log('pt  voices: ', voicesPt);
+    // console.log('en voices: ', voicesEn);
+
+    voicesDropdown.innerHTML = newVoices
+      // .filter(voice => voice.lang.includes('en')) 
+      .map(voice => `<option value = "${voice.name}">${voice.name} - Language: (${voice.lang})</option>`)
+      .join('');
+  }
+
+  function setVoice(){
+    //console.log(this.value); // should be the name of voice
+    msg.voice = voices.find(voice => voice.name === this.value);
+  }
+
+  function toggle(startOver = true){
+    speechSynthesis.cancel();
+    if(startOver){
+      speechSynthesis.speak(msg);
+    }
+  }
+
+  function setOption(){
+    console.log(this.name, this.value);
+    msg[this.name] = this.value;
+    toggle();
+  };
+
+  speechSynthesis.addEventListener('voiceschanged', populateVoices);
+  voicesDropdown.addEventListener('change', setVoice);
+
+  options.forEach(option => option.addEventListener('change', setOption));
+  speakButton.addEventListener('click', toggle);
+  // stopButton.addEventListener('click', toggle.bind(null, false));
+  stopButton.addEventListener('click', () => toggle(false));
+
+
+
+
+
 </script>
 
 </body>
