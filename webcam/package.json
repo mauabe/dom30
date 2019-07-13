@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "browser-sync": "2.26.5"
+    "browser-sync": "2.26.5",
+    "lodash": "4.17.14"
   }
 }
